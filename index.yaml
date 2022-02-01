@@ -1,0 +1,10 @@
+name: gitops-cp-data-fabric
+type: gitops
+description: >-
+  Module to populate a gitops repo with the resources to provision
+  cp-data-fabric
+tags:
+  - tools
+  - gitops
+versions: []
+id: github.com/cloud-native-toolkit/terraform-gitops-cp-data-fabric
