@@ -6,7 +6,7 @@ resource null_resource write_outputs {
     environment = {
       OUTPUT = jsonencode({
         name        = module.cp-data-fabric.name
-        cpd_namespace= module.cp-data-fabric.cpd_namespace
+        cpd_namespace = module.cp-data-fabric.cpd_namespace
         branch      = module.cp-data-fabric.branch
         namespace   = module.cp-data-fabric.namespace
         server_name = module.cp-data-fabric.server_name
