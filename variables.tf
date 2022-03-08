@@ -79,3 +79,9 @@ variable "server_name" {
   description = "The name of the server"
   default     = "default"
 }
+
+variable "cpd_namespace" {
+  type        = string
+  description = "CPD namespace"
+  default = "gitops-cp4d-instance"
+}

@@ -1,15 +1,17 @@
 locals {
-  name          = "my-module"
+  name          = "cpd-data-fabric"
+  job_name      = "datafabric-setup-job"
   bin_dir       = module.setup_clis.bin_dir
-  yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.name}"
+  yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.job_name}"
   service_url   = "http://${local.name}.${var.namespace}"
   values_content = {
   }
-  layer = "services"
+  layer = "application"
   type  = "base"
   application_branch = "main"
   namespace = var.namespace
   layer_config = var.gitops_config[local.layer]
+  cpd_namespace = var.cpd_namespace
 }
 
 module setup_clis {
@@ -18,7 +20,7 @@ module setup_clis {
 
 resource null_resource create_yaml {
   provisioner "local-exec" {
-    command = "${path.module}/scripts/create-yaml.sh '${local.name}' '${local.yaml_dir}'"
+    command = "${path.module}/scripts/create-yaml.sh '${local.job_name}' '${local.yaml_dir}'"
 
     environment = {
       VALUES_CONTENT = yamlencode(local.values_content)
@@ -31,7 +33,7 @@ resource null_resource setup_gitops {
 
   triggers = {
     name = local.name
-    namespace = var.namespace
+    namespace = var.cpd_namespace
     yaml_dir = local.yaml_dir
     server_name = var.server_name
     layer = local.layer

@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: datafabric-job
+spec:
+  template:
+    metadata:
+      name: df-setup-pod
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: df-scripts
+          configMap:
+            name: datafabric-configmap
+            defaultMode: 0777
+      containers:
+        - name: df-setup-pod
+          image: quay.io/ibmgaragecloud/cli-tools
+          volumeMounts:
+            - mountPath: /df-scripts
+              name: df-scripts
+          env:
+            - name: ENV_USERNAME
+              value: "admin"
+            - name: ENV_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: admin-user-details
+                  key: initial_admin_password
+          command:
+            - /bin/sh
+          args:
+            - '-c'
+            - /df-scripts/datafabric_setup.sh
