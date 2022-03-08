@@ -5,6 +5,12 @@ output "name" {
   depends_on  = [null_resource.setup_gitops]
 }
 
+output "cpd_namespace" {
+  description = "cpd namespace"
+  value       = local.cpd_namespace
+  depends_on  = [null_resource.setup_gitops]
+}
+
 output "branch" {
   description = "The branch where the module config has been placed"
   value       = local.application_branch
