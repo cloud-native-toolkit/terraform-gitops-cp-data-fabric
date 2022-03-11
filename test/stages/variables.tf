@@ -1,11 +1,11 @@
 variable cluster_username { 
   type        = string
-  description = "The username for AWS access"
+  description = "The username for OCP cluster access"
 }
 
 variable "cluster_password" {
   type        = string
-  description = "The password for AWS access"
+  description = "The password for OCP cluster access"
 }
 
 variable "server_url" {
