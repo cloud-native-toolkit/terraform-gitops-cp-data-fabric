@@ -24,6 +24,12 @@ module setup_clis {
   source = "github.com/cloud-native-toolkit/terraform-util-clis.git"
 }
 
+module aws-s3-bucket {
+  source = "github.com/cloud-native-toolkit/terraform-aws-s3-bucket.git"
+  bucket_id = var.s3_bucket_id
+  file_path = "Datafiles/aws/"
+}
+
 resource null_resource create_yaml {
   provisioner "local-exec" {
     command = "${path.module}/scripts/create-yaml.sh '${local.job_name}' '${local.yaml_dir}'"
