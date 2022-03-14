@@ -7,11 +7,9 @@ locals {
   values_content = {
     aws_access_key = var.access_key
     aws_secret_key = var.secret_key
-    s3_bucket_id = "datafabric-v4"
-    # var.s3_bucket_id
-    s3_bucket_region = "ap-south-1"
-    # var.s3_bucket_region
-    s3_bucket_url = "https://s3.ap-south-1.amazonaws.com"
+    s3_bucket_id = var.s3_bucket_id
+    s3_bucket_region = var.s3_bucket_region
+    s3_bucket_url = "https://s3.${var.s3_bucket_region}.amazonaws.com"
   }
   layer = "services"
   type  = "base"
