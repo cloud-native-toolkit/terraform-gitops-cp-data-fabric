@@ -696,3 +696,4 @@ if [ "$CPD_CLUSTER_HOST" != "" ] && [ "$CPD_TOKEN" != "" ]; then
 else
   echo "Please provide CPD_CLUSTER_HOST & CPD_TOKEN "
 fi
+exit 0

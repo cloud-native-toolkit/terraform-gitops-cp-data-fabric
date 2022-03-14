@@ -3,7 +3,6 @@
 GIT_REPO=$(cat git_repo)
 GIT_TOKEN=$(cat git_token)
 
-
 REGION=$(cat terraform.tfvars | grep -E "^region" | sed "s/region=//g" | sed 's/"//g')
 
 aws configure set region ${REGION}
@@ -43,7 +42,7 @@ echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/values.
 cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/values.yaml"
 
 count=0
-until kubectl get namespace "${NAMESPACE}" 1> /dev/null 2> /dev/null || [[ $count -eq 20 ]]; do
+until kubectl get namespace "${NAMESPACE}" 1>/dev/null 2>/dev/null || [[ $count -eq 20 ]]; do
   echo "Waiting for namespace: ${NAMESPACE}"
   count=$((count + 1))
   sleep 15
@@ -57,7 +56,15 @@ else
   sleep 30
 fi
 
-
+POD=$(kubectl get pods | awk '{print $1}' | grep -e "datafabric")
+echo $POD
+POD_STATUS="Running"
+while [ "$POD_STATUS" != "Completed" ]; do
+  #Check Data Fabric POD Status
+  sleep 60
+  POD_STATUS=$(kubectl get po ${POD} | awk '{print $3}')
+  echo "Check Data Fabric POD Status **** $POD_STATUS *******"
+done
 
 cd ..
 rm -rf .testrepo
