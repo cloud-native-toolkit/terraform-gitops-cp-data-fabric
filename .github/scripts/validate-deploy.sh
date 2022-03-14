@@ -3,6 +3,13 @@
 GIT_REPO=$(cat git_repo)
 GIT_TOKEN=$(cat git_token)
 
+
+REGION=$(cat terraform.tfvars | grep -E "^region" | sed "s/region=//g" | sed 's/"//g')
+
+aws configure set region ${REGION}
+aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+
 export KUBECONFIG=$(cat .kubeconfig)
 NAMESPACE=$(jq -r '.cpd_namespace // "gitops-cp4d-instance"' gitops-output.json)
 COMPONENT_NAME=$(jq -r '.name // "my-module"' gitops-output.json)
