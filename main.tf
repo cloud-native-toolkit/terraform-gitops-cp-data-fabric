@@ -27,16 +27,16 @@ module setup_clis {
 module "aws_s3_instance" {
   source = "github.com/cloud-native-toolkit/terraform-aws-s3-instance.git"
   bucket_prefix = "datafabric"
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 module "aws-s3-bucket"{
   source = "github.com/cloud-native-toolkit/terraform-aws-s3-bucket.git"
   bucket_id = module.aws_s3_instance.s3_bucket_id
   file_path = "Datafiles/aws/"
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 resource null_resource create_yaml {
