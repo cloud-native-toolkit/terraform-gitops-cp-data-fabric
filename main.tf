@@ -11,7 +11,7 @@ locals {
     # var.s3_bucket_id
     s3_bucket_region = "ap-south-1"
     # var.s3_bucket_region
-    s3_bucket_url = "https://s3.${local.values_content.s3_bucket_region}.amazonaws.com"
+    s3_bucket_url = "https://s3.ap-south-1.amazonaws.com"
   }
   layer = "services"
   type  = "base"
