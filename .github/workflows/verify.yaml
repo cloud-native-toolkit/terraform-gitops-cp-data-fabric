@@ -19,6 +19,7 @@ jobs:
       matrix:
         testcase:
           - ocp4_latest_gitops_cp4d
+          - aws_latest
       #      max-parallel: 1
       fail-fast: false
 
