@@ -89,7 +89,7 @@ variable "cpd_namespace" {
 
 variable "s3_bucket_id" {
   description = "The name of the bucket."
-  value       = "datafabric-v5"
+  default       = "datafabric-v4"
 }
 
 variable "s3_bucket_region" {
