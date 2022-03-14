@@ -85,3 +85,27 @@ variable "cpd_namespace" {
   description = "CPD namespace"
   default = "gitops-cp4d-instance"
 }
+
+
+variable "s3_bucket_id" {
+  description = "The name of the bucket."
+  value       = "datafabric-v5"
+}
+
+variable "s3_bucket_region" {
+  type        = string
+  default     = "ap-south-1"
+  description = "Please set the region where the resouces to be created "
+}
+
+variable "access_key" {
+  type        = string
+  default = ""
+  description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
+}
+
+variable "secret_key" {
+  type        = string
+  default = ""
+  description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
+ }

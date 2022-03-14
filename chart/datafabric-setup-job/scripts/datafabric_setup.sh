@@ -73,11 +73,11 @@ fi
 ############################################################
 # Create Amazon S3 Platform connection in Cloud pak for Data
 ############################################################
-# BUCKET="XXXXXXX"
-# REGION="XXXXXXX"
-# URL="XXXXXXX"
-# ACCESS_KEY="XXXXXXX"
-# SECRET_KEY="XXXXXXX"
+BUCKET="${ENV_S3_BUCKET_ID}"
+REGION="${ENV_S3_BUCKET_REGION}"
+URL="${ENV_S3_BUCKET_URL}"
+ACCESS_KEY="${ENV_AWS_ACCESS_KEY}"
+SECRET_KEY="${ENV_AWS_SECRET_KEY}"
 
 if [ "$CPD_CLUSTER_HOST" != "" ] && [ "$CPD_TOKEN" != "" ]; then
   if ! DS_RESPONSE=$(

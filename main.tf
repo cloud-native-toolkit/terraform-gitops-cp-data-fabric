@@ -5,6 +5,13 @@ locals {
   yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.job_name}"
   service_url   = "http://${local.name}.${var.namespace}"
   values_content = {
+    aws_access_key = var.access_key
+    aws_secret_key = var.secret_key
+    s3_bucket_id = "datafabric-v4"
+    # var.s3_bucket_id
+    s3_bucket_region = "ap-south-1"
+    # var.s3_bucket_region
+    s3_bucket_url = "https://s3.${local.values_content.s3_bucket_region}.amazonaws.com"
   }
   layer = "services"
   type  = "base"
@@ -12,6 +19,7 @@ locals {
   namespace = var.namespace
   layer_config = var.gitops_config[local.layer]
   cpd_namespace = var.cpd_namespace
+  
 }
 
 module setup_clis {

@@ -27,6 +27,16 @@ spec:
                 secretKeyRef:
                   name: admin-user-details
                   key: initial_admin_password
+            - name: ENV_AWS_ACCESS_KEY
+              value: {{ .Values.aws_access_key }}
+            - name: ENV_AWS_SECRET_KEY
+              value: {{ .Values.aws_secret_key }}
+            - name: ENV_S3_BUCKET_ID
+              value: {{ .Values.s3_bucket_id }}
+            - name: ENV_S3_BUCKET_REGION
+              value: {{ .Values.s3_bucket_region }}
+            - name: ENV_S3_BUCKET_URL
+              value: {{ .Values.s3_bucket_url }} 
           command:
             - /bin/sh
           args:
