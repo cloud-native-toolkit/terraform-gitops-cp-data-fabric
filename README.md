@@ -1,27 +1,31 @@
-# Starter kit for a Terraform GitOps module
+# Data Fabric Solution Automation module
 
-This is a Starter kit to help with the creation of Terraform modules. The basic structure of a Terraform module is fairly
-simple and consists of the following basic values:
 
-- README.md - provides a description of the module
-- main.tf - defines the logic for the module
-- variables.tf (optional) - defines the input variables for the module
-- outputs.tf (optional) - defines the values that are output from the module
+This module performs the following steps to configure and setup Data Fabric Solution on Cloud pak for Data.
 
-Beyond those files, any other content can be added and organized however you see fit. For example, you can add a `scripts/` directory
-that contains shell scripts executed by a `local-exec` `null_resource` in the terraform module. The contents will depend on what your
-module does and how it does it.
+  1. Login to Cloud pak for Data and get the token
+  2. Create Users in Cloud pak for Data
+  3. Create Amazon S3 Platform connection in Cloud pak for Data
+  4. Create Analytics Project in Cloud pak for Data
+  5. Virtualize files from DV
+  6. Create Join
+  7. Create Category, Classification, Business Term, Reference Data, Data Class, Data Protection Rule
+  8. Add Connection to Catalog, Add Connected asset to Catalog, Add users to Catalog
+  9. Create Auto AI Experiment (Create Space, Create Pipeline, Create Data Asset, Create & Upload Attachment, Create Training and Deploy Model)
 
-## Instructions for creating a new module
-
-1. Update the title and description in the README to match the module you are creating
-2. Fill out the remaining sections in the README template as appropriate
-3. Implement your logic in the in the main.tf, variables.tf, and outputs.tf
-4. Use releases/tags to manage release versions of your module
 
 ## Software dependencies
 
 The module depends on the following software components:
+
+  1. Openshift Cluster
+  2. Cloud Pak for Data
+  3. AWS S3 Bucket
+  4. Azure Database
+  5. Data Virtualization in CPD
+  6. Watson Knowledge Catalog in CPD
+  7. Watson Studio in CPD
+  8. Watson Machine Learning in CPD 
 
 ### Command-line tools
 
@@ -37,23 +41,37 @@ The module depends on the following software components:
 
 This module makes use of the output from other modules:
 
-- GitOps - github.com/cloud-native-toolkit/terraform-tools-gitops.git
-- Namespace - github.com/cloud-native-toolkit/terraform-gitops-namespace.git
-- etc
+- [ocp-login]
+- [gitops-repo]
+- [argocd-bootstrap]
+- [gitops-namespace]
+- [terraform-gitops-pull-secret]
+- [gitops-cp-catalogs]
+- [terraform-gitops-pull-secret] (https://github.com/cloud-native-toolkit/terraform-gitops-pull-secret)
+- [terraform-gitops-cp-foundational-services] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-foundational-services)
+- [terraform-gitops-cp4d-operator] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-operator)
+- [terraform-gitops-cp4d-instance] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-instance)
+- [cp-data-virtualization-service] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-data-virtualization-service)
+- [cp-watson-knowledge-catalog] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-knowledge-catalog)
+- [cp-watson-studio] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-studio)
+- [cp-watson-machine-learning] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-machine-learning)
+- [cp-data-virtualization] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-data-virtualization)
+- [aws-s3-instance] - (https://github.com/cloud-native-toolkit/terraform-aws-s3-instance)
+- [aws-s3-bucket] - (https://github.com/cloud-native-toolkit/terraform-aws-s3-bucket)
+
 
 ## Example usage
 
 ```hcl-terraform
-module "dev_tools_argocd" {
-  source = "github.com/cloud-native-toolkit/terraform-tools-argocd.git"
+module "cp_data_fabric" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-data-fabric.git"
 
-  cluster_config_file = module.dev_cluster.config_file_path
-  cluster_type        = module.dev_cluster.type
-  app_namespace       = module.dev_cluster_namespaces.tools_namespace_name
-  ingress_subdomain   = module.dev_cluster.ingress_hostname
-  olm_namespace       = module.dev_software_olm.olm_namespace
-  operator_namespace  = module.dev_software_olm.target_namespace
-  name                = "argocd"
+  gitops_config = module.gitops.gitops_config
+  git_credentials = module.gitops.git_credentials
+  server_name = module.gitops.server_name
+  namespace = module.gitops_namespace.name
+  kubeseal_cert = module.gitops.sealed_secrets_cert
+  cpd_namespace = "gitops-cp4d-instance" # module.cp4d-instance.namespace
 }
 ```
 
