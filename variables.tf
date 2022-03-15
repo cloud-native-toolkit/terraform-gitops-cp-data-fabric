@@ -109,3 +109,9 @@ variable "secret_key" {
   default = ""
   description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
  }
+
+ variable "file_path" {
+  type    = string
+  default = "Datafiles/aws"
+  description = "Path to a folder that will be read and uploaded "
+}

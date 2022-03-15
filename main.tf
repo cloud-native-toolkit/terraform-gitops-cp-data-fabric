@@ -26,7 +26,7 @@ module setup_clis {
 
 module "aws_s3_instance" {
   source = "github.com/cloud-native-toolkit/terraform-aws-s3-instance.git"
-  bucket_prefix = "datafabric"
+  bucket_prefix = var.s3_bucket_id
   access_key = var.access_key
   secret_key = var.secret_key
 }
