@@ -1,11 +1,11 @@
 variable cluster_username { 
   type        = string
-  description = "The username for AWS access"
+  description = "The username for OCP cluster access"
 }
 
 variable "cluster_password" {
   type        = string
-  description = "The password for AWS access"
+  description = "The password for OCP cluster access"
 }
 
 variable "server_url" {
@@ -82,3 +82,21 @@ variable "cpd_namespace" {
   description = "CPD namespace"
   default = "gitops-cp4d-instance"
 }
+
+variable "region" {
+  type        = string
+  default     = "ap-south-1"
+  description = "Please set the region where the resouces to be created "
+}
+
+variable "access_key" {
+  type        = string
+  default = ""
+  description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
+}
+
+variable "secret_key" {
+  type        = string
+  default = ""
+  description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
+ }
