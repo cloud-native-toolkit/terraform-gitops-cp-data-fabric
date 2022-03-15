@@ -56,7 +56,7 @@ else
   sleep 30
 fi
 
-POD=$(kubectl get pods -n ${NAMESPACE}  | awk '{print $1}' | grep -e "datafabric")
+POD=$(kubectl get pods -n ${NAMESPACE}  | awk '{print $1}' | grep "datafabric")
 echo $POD
 #Check Data Fabric POD Status
 POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} |awk '{print $3}')
@@ -70,3 +70,5 @@ done
 
 cd ..
 rm -rf .testrepo
+
+
