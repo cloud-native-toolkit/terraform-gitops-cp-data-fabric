@@ -41,13 +41,12 @@ The module depends on the following software components:
 
 This module makes use of the output from other modules:
 
-- GitOps - github.com/cloud-native-toolkit/terraform-tools-gitops.git
-- Namespace - github.com/cloud-native-toolkit/terraform-gitops-namespace.git
-- GitOps modules
-- OCP Cluster
-- Provision AWS S3 instance 
-- Create AWS Bucket
-- Create Azure DB
+- [ocp-login]
+- [gitops-repo]
+- [argocd-bootstrap]
+- [gitops-namespace]
+- [terraform-gitops-pull-secret]
+- [gitops-cp-catalogs]
 - [terraform-gitops-pull-secret] (https://github.com/cloud-native-toolkit/terraform-gitops-pull-secret)
 - [terraform-gitops-cp-foundational-services] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-foundational-services)
 - [terraform-gitops-cp4d-operator] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-operator)
@@ -57,6 +56,8 @@ This module makes use of the output from other modules:
 - [cp-watson-studio] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-studio)
 - [cp-watson-machine-learning] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-machine-learning)
 - [cp-data-virtualization] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-data-virtualization)
+- [aws-s3-instance] - (https://github.com/cloud-native-toolkit/terraform-aws-s3-instance)
+- [aws-s3-bucket] - (https://github.com/cloud-native-toolkit/terraform-aws-s3-bucket)
 
 
 ## Example usage
