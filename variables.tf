@@ -86,10 +86,9 @@ variable "cpd_namespace" {
   default = "gitops-cp4d-instance"
 }
 
-
 variable "s3_bucket_id" {
   description = "The name of the bucket."
-  default       = "datafabric-v4"
+  default       = "datafabric"
 }
 
 variable "s3_bucket_region" {
@@ -110,8 +109,3 @@ variable "secret_key" {
   description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
  }
 
- variable "file_path" {
-  type    = string
-  default = "Datafiles/aws"
-  description = "Path to a folder that will be read and uploaded "
-}
