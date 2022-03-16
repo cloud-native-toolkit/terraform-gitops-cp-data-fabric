@@ -61,12 +61,12 @@ echo $POD
 #Check Data Fabric POD Status
 POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} |awk '{print $3}')
 echo $POD_STATUS
-while [ "$POD_STATUS" != "Running" ]; do
-  #Check Data Fabric POD Status
-  sleep 60
-  POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} |awk '{print $3}')
-  echo "Check Data Fabric POD Status **** $POD_STATUS *******"
-done
+# while [ "$POD_STATUS" != "Running" ]; do
+#   #Check Data Fabric POD Status
+#   sleep 60
+#   POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} |awk '{print $3}')
+#   echo "Check Data Fabric POD Status **** $POD_STATUS *******"
+# done
 
 cd ..
 rm -rf .testrepo
