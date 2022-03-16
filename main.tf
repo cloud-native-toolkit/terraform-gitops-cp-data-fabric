@@ -24,21 +24,6 @@ module setup_clis {
   source = "github.com/cloud-native-toolkit/terraform-util-clis.git"
 }
 
-module "aws_s3_instance" {
-  source = "github.com/cloud-native-toolkit/terraform-aws-s3-instance.git"
-  bucket_prefix = var.s3_bucket_id
-  access_key = var.access_key
-  secret_key = var.secret_key
-}
-
-module "aws-s3-bucket"{
-  source = "github.com/cloud-native-toolkit/terraform-aws-s3-bucket.git"
-  bucket_id = module.aws_s3_instance.s3_bucket_id
-  file_path = "Datafiles/aws/"
-  access_key = var.access_key
-  secret_key = var.secret_key
-}
-
 resource null_resource create_yaml {
   provisioner "local-exec" {
     command = "${path.module}/scripts/create-yaml.sh '${local.job_name}' '${local.yaml_dir}'"
