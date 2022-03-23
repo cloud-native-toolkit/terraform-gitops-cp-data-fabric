@@ -82,17 +82,11 @@ data:
     ############################################################
     # Create Amazon S3 Platform connection in Cloud pak for Data
     ############################################################
-    BUCKET="${ENV_S3_BUCKET_ID}"
-    REGION="${ENV_S3_BUCKET_REGION}"
-    URL="${ENV_S3_BUCKET_URL}"
-    ACCESS_KEY="${ENV_AWS_ACCESS_KEY}"
-    SECRET_KEY="${ENV_AWS_SECRET_KEY}"
-
-    echo "BUCKET ***** ${BUCKET}"
-    echo "REGION ***** ${REGION}"
-    echo "URL ***** ${URL}"
-    echo "ACCESS_KEY ***** ${ACCESS_KEY}"
-    echo "SECRET_KEY ***** ${SECRET_KEY}" 
+    BUCKET=${ENV_S3_BUCKET_ID//$'\n'/}
+    REGION=${ENV_S3_BUCKET_REGION//$'\n'/}
+    URL=${ENV_S3_BUCKET_URL//$'\n'/}
+    ACCESS_KEY=${ENV_AWS_ACCESS_KEY//$'\n'/}
+    SECRET_KEY=${ENV_AWS_SECRET_KEY//$'\n'/}
 
     if [ "$CPD_CLUSTER_HOST" != "" ] && [ "$CPD_TOKEN" != "" ]; then
       if ! DS_RESPONSE=$(
@@ -343,7 +337,7 @@ data:
         echo "Failed to Create Category "
         exit 1
       fi
-      echo "Create Category  Completed - ***** $CREATE_CATEGORY"
+      echo "Create Category  Completed"
       CATEGORY_ID=$(echo "$CREATE_CATEGORY" | jq -r '.resources[] | select(.entity_type=="category") | .artifact_id')
       #Create Classification
       NAME="Data Fabric Classification$UNIQUE_ID"
@@ -358,7 +352,7 @@ data:
         echo "Failed to Create Classification"
         exit 1
       fi
-      echo "Create Classification Completed- *** $CREATE_CLASSIFICATION"
+      echo "Create Classification Completed"
       CLASSIFICATION_ID=$(echo "$CREATE_CLASSIFICATION" | jq -r '.resources[] | select(.entity_type=="classification") | .artifact_id')
       #Create Business Term
       NAME="Data Fabric Business Term$UNIQUE_ID"
@@ -373,7 +367,7 @@ data:
         echo "Failed to Create Business Term"
         exit 1
       fi
-      echo "Create Business Term Completed- ** $CREATE_BUSINESS_TERM"
+      echo "Create Business Term Completed"
       BUSINESS_TERM_ID=$(echo "$CREATE_BUSINESS_TERM" | jq -r '.resources[] | select(.entity_type=="glossary_term") | .artifact_id')
       #Create Reference Data Set
       NAME="Data Fabric data$UNIQUE_ID"
@@ -388,8 +382,7 @@ data:
         echo "Failed to Create Reference Data Set"
         exit 1
       fi
-      echo "Create Reference Data Set Completed- **$CREATE_REF_DATASET"
-      sleep 60
+      echo "Create Reference Data Set Completed"
       REF_FILE_ID=$(echo "$CREATE_REF_DATASET" | jq -r '.resources[] | select(.entity_type=="reference_data") | .artifact_id')
       #Create Data Class
       NAME="Data Fabric data$UNIQUE_ID"

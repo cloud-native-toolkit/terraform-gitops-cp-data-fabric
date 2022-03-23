@@ -73,17 +73,11 @@ fi
 ############################################################
 # Create Amazon S3 Platform connection in Cloud pak for Data
 ############################################################
-BUCKET="${ENV_S3_BUCKET_ID}"
-REGION="${ENV_S3_BUCKET_REGION}"
-URL="${ENV_S3_BUCKET_URL}"
-ACCESS_KEY="${ENV_AWS_ACCESS_KEY}"
-SECRET_KEY="${ENV_AWS_SECRET_KEY}"
-
-echo "Script Test - BUCKET ***** ${BUCKET}"
-echo "REGION ***** ${REGION}"
-echo "URL ***** ${URL}"
-echo "ACCESS_KEY ***** ${ACCESS_KEY}"
-echo "SECRET_KEY ***** ${SECRET_KEY}"
+BUCKET=${ENV_S3_BUCKET_ID//$'\n'/}
+REGION=${ENV_S3_BUCKET_REGION//$'\n'/}
+URL=${ENV_S3_BUCKET_URL//$'\n'/}
+ACCESS_KEY=${ENV_AWS_ACCESS_KEY//$'\n'/}
+SECRET_KEY=${ENV_AWS_SECRET_KEY//$'\n'/}
 
 if [ "$CPD_CLUSTER_HOST" != "" ] && [ "$CPD_TOKEN" != "" ]; then
   if ! DS_RESPONSE=$(
