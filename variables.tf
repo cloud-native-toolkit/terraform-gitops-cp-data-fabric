@@ -88,7 +88,7 @@ variable "cpd_namespace" {
 
 variable "s3_bucket_id" {
   description = "The name of the bucket."
-  default       = "datafabric"
+  default     = ""
 }
 
 variable "s3_bucket_region" {
