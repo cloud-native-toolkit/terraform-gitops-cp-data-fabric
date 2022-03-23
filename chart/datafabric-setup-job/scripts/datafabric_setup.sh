@@ -79,11 +79,6 @@ URL="${ENV_S3_BUCKET_URL}"
 ACCESS_KEY="${ENV_AWS_ACCESS_KEY}"
 SECRET_KEY="${ENV_AWS_SECRET_KEY}"
 
-echo "Script Test - BUCKET ***** ${BUCKET}"
-echo "REGION ***** ${REGION}"
-echo "URL ***** ${URL}"
-echo "ACCESS_KEY ***** ${ACCESS_KEY}"
-echo "SECRET_KEY ***** ${SECRET_KEY}"
 
 if [ "$CPD_CLUSTER_HOST" != "" ] && [ "$CPD_TOKEN" != "" ]; then
   if ! DS_RESPONSE=$(
