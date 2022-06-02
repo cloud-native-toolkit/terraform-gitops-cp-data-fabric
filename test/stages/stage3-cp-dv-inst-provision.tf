@@ -1,11 +1,10 @@
-module "cp-data-fabric" {
-  source = "./module"
+module "cpd-dv-provision" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-data-virtualization"
 
   depends_on = [
-    module.cpd-dv-provision,
-    module.aws-s3-bucket,
-    module.aws_s3_instance
+    module.cp4d-dv-service
   ]
+
 
   gitops_config = module.gitops.gitops_config
   git_credentials = module.gitops.git_credentials
@@ -13,5 +12,4 @@ module "cp-data-fabric" {
   namespace = module.gitops_namespace.name
   kubeseal_cert = module.gitops.sealed_secrets_cert
   cpd_namespace = "gitops-cp4d-instance"
-  # module.cp4d-instance.namespace
 }

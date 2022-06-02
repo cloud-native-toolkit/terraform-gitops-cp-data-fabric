@@ -20,6 +20,8 @@ spec:
             - mountPath: /df-scripts
               name: df-scripts
           env:
+            - name: ENV_CPD_NAMESPACE
+              value: {{ .Values.cpd_namespace }}
             - name: ENV_USERNAME
               value: "admin"
             - name: ENV_PASSWORD
