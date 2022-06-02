@@ -86,6 +86,12 @@ variable "cpd_namespace" {
   default = "gitops-cp4d-instance"
 }
 
+variable "operator_namespace" {
+  type        = string
+  description = "Namespace for cpd operators"
+  default = "cpd-operators"
+}
+
 variable "s3_bucket_id" {
   description = "The name of the bucket."
   default     = ""
@@ -109,3 +115,26 @@ variable "secret_key" {
   description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
  }
 
+variable "wkc_inst_name" {
+  type        = string
+  description = "WKC Instance name"
+  default = "wkc-cr"
+}
+
+variable "ws_inst_name" {
+  type        = string
+  description = "WS Instance name"
+  default = "ws-cr"
+}
+
+variable "wml_inst_name" {
+  type        = string
+  description = "WML Instance name"
+  default = "ibm-cpd-wml-operator-subscription"
+}
+
+variable "dv_svc_inst_name" {
+  type        = string
+  description = "DV Instance name"
+  default = "ibm-dv-operator-catalog-subscription"
+}

@@ -4,9 +4,10 @@ locals {
   bin_dir       = module.setup_clis.bin_dir
   yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.job_name}"
   service_url   = "http://${local.name}.${var.namespace}"
-  # values_content = {
-   
-  # }
+  values_content = {
+    cpd_namespace = var.cpd_namespace
+    operator_namespace = var.operator_namespace
+  }
   layer = "services"
   type  = "base"
   application_branch = "main"
@@ -24,9 +25,9 @@ resource null_resource create_yaml {
   provisioner "local-exec" {
     command = "${path.module}/scripts/create-yaml.sh '${local.job_name}' '${local.yaml_dir}'"
 
-    # environment = {
-    #   VALUES_CONTENT = yamlencode(local.values_content)
-    # }
+    environment = {
+      VALUES_CONTENT = yamlencode(local.values_content)
+    }
   }
 }
 
