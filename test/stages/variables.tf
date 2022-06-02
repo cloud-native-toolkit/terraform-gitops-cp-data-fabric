@@ -83,7 +83,7 @@ variable "cpd_namespace" {
   default = "gitops-cp4d-instance"
 }
 
-variable "region" {
+variable "s3_bucket_region" {
   type        = string
   default     = "ap-south-1"
   description = "Please set the region where the resouces to be created "
