@@ -10,7 +10,7 @@ aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
 aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
 
 export KUBECONFIG=$(cat .kubeconfig)
-NAMESPACE=$(jq -r '.cpd_namespace // "gitops-cp4d-instance"' gitops-output.json)
+NAMESPACE=$(jq -r '.cpd_namespace // "cp4d"' gitops-output.json)
 COMPONENT_NAME=$(jq -r '.name // "my-module"' gitops-output.json)
 BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
 SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
@@ -68,6 +68,10 @@ while [ true ]; do
   fi
   sleep 60
 done
+
+# cleanup the resources
+kubectl delete configmap datafabric-configmap -n ${NAMESPACE}
+kubectl delete job datafabric-job -n ${NAMESPACE}
 
 cd ..
 rm -rf .testrepo

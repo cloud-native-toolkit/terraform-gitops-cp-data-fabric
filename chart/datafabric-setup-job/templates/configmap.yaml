@@ -86,7 +86,7 @@ data:
     echo "Data Virtualization DvService/"${INSTANCE_NAME}" is "${INSTANCE_STATUS}""
 
     ############################################################
-    # Create Join
+    # Data Virtualization Provision Instance check
     ############################################################
     dvenginePod=$(kubectl get pod -n $CPD_NAMESPACE --no-headers=true -l component=db2dv,name=dashmpp-head-0,role=db,type=engine | awk '{print $1}')
     echo "DV engine head pod is $dvenginePod"

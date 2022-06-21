@@ -83,7 +83,7 @@ variable "server_name" {
 variable "cpd_namespace" {
   type        = string
   description = "CPD namespace"
-  default = "gitops-cp4d-instance"
+  default = "cp4d"
 }
 
 variable "operator_namespace" {
@@ -101,6 +101,12 @@ variable "s3_bucket_region" {
   type        = string
   default     = "ap-south-1"
   description = "Please set the region where the resouces to be created "
+}
+
+variable "s3_bucket_url" {
+  type        = string
+  default     = ""
+  description = "Please set the bucket url where the resouces to be created "
 }
 
 variable "access_key" {
