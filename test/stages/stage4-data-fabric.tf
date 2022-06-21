@@ -2,7 +2,7 @@ module "cp-data-fabric" {
   source = "./module"
 
   depends_on = [
-    module.cpd-dv-provision,
+    # module.cpd-dv-provision,
     module.aws-s3-bucket,
     module.aws_s3_instance
   ]
