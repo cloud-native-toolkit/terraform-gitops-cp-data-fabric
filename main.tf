@@ -38,7 +38,7 @@ resource null_resource create_secrets_yaml {
       KEY_S3_BUCKET_REGION = "aws_region"
       VAL_S3_BUCKET_REGION = var.s3_bucket_region
       KEY_S3_BUCKET_URL = "aws_s3_bucket_url"
-      VAL_S3_BUCKET_URL = "https://s3.${local.s3_bucket_region}.amazonaws.com"
+      VAL_S3_BUCKET_URL = "https://s3.${var.s3_bucket_region}.amazonaws.com"
 
      
     }
