@@ -23,6 +23,10 @@ versions:
         refs:
           - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
             version: '>= 1.0.0'
+      - id: aws-s3-instance
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-aws-s3-instance
+            version: ">= 1.1.0"
     variables:
       - name: gitops_config
         moduleRef:
@@ -44,3 +48,11 @@ versions:
         moduleRef:
           id: gitops
           output: sealed_secrets_cert
+      - name: s3_bucket_id
+        moduleRef:
+          id: aws-s3-instance
+          output: s3_bucket_id
+      - name: s3_bucket_region
+        moduleRef:
+          id: aws-s3-instance
+          output: s3_bucket_region
