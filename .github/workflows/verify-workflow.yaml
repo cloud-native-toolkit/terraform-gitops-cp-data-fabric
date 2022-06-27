@@ -47,8 +47,7 @@ jobs:
       matrix:
         testcase:
           #comment-out or remove either of the platforms you do not need.  ocp4_latest is IBM Cloud
-          - ${{ inputs.testcase }}
-          # - aws_latest_gitops
+          - ocp4_latest_gitops_cp4d
       max-parallel: 1
       fail-fast: false
 
