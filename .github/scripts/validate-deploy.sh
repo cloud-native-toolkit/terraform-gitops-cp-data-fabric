@@ -63,7 +63,7 @@ POD_STATUS=""
 while [ true ]; do
   POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} |awk '{print $3}')
   echo "Waiting for POD ${POD} to be Completed. Current status : "${POD_STATUS}""
-  if [ ${POD_STATUS} == "Running" ]; then
+  if [ ${POD_STATUS} == "Completed" ]; then
     break
   fi
   sleep 60
