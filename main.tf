@@ -15,6 +15,7 @@ locals {
   namespace = var.namespace
   layer_config = var.gitops_config[local.layer]
   cpd_namespace = var.cpd_namespace
+  operator_namespace = var.operator_namespace
   secret_name="aws-details" 
 }
 
