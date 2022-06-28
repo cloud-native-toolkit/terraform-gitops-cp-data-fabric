@@ -1,13 +1,30 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
+
 GIT_REPO=$(cat git_repo)
 GIT_TOKEN=$(cat git_token)
 
-REGION=$(cat terraform.tfvars | grep -E "^region" | sed "s/region=//g" | sed 's/"//g')
+BIN_DIR=$(cat .bin_dir)
 
-aws configure set region ${REGION}
-aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+export PATH="${BIN_DIR}:${PATH}"
+
+source "${SCRIPT_DIR}/validation-functions.sh"
+
+if ! command -v oc 1> /dev/null 2> /dev/null; then
+  echo "oc cli not found" >&2
+  exit 1
+fi
+
+if ! command -v kubectl 1> /dev/null 2> /dev/null; then
+  echo "kubectl cli not found" >&2
+  exit 1
+fi
+
+if ! command -v ibmcloud 1> /dev/null 2> /dev/null; then
+  echo "ibmcloud cli not found" >&2
+  exit 1
+fi
 
 export KUBECONFIG=$(cat .kubeconfig)
 NAMESPACE=$(jq -r '.cpd_namespace // "cp4d"' gitops-output.json)
@@ -16,6 +33,7 @@ BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
 SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
 LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
 TYPE=$(jq -r '.type // "base"' gitops-output.json)
+OPERATOR_NAMESPACE=$(jq -r '.operator_namespace // "cpd-operators"' gitops-output.json)
 
 sleep 600
 
@@ -58,6 +76,91 @@ else
   sleep 30
 fi
 
+############################################################
+#  Watson Knowledge Catalog Instance check
+############################################################
+INSTANCE_STATUS=""
+while [ true ]; do
+  INSTANCE_STATUS=$(kubectl get WKC wkc-cr -n "${NAMESPACE}" -o jsonpath='{.status.wkcStatus} {"\n"}')
+  echo "Waiting for instance wkc-cr to be ready. Current status : "${INSTANCE_STATUS}""
+  if [ $INSTANCE_STATUS == "Completed" ]; then
+    break
+  fi
+  sleep 30
+done
+echo "Watson Knowledge Catalog WKC/wkc-cr is "${INSTANCE_STATUS}""
+
+############################################################
+# Watson Studio Instance check
+############################################################
+INSTANCE_STATUS=""
+while [ true ]; do
+  INSTANCE_STATUS=$(kubectl get WS ws-cr -n "${NAMESPACE}" -o jsonpath='{.status.wsStatus} {"\n"}')
+  echo "Waiting for instance ws-cr to be ready. Current status : "${INSTANCE_STATUS}""
+  if [ $INSTANCE_STATUS == "Completed" ]; then
+    break
+  fi
+  sleep 60
+done
+echo "Watson Studio WS/ws-cr is "${INSTANCE_STATUS}""
+
+############################################################
+# Watson Machine Learning Instance check
+############################################################
+INSTANCE_STATUS=""
+while [ true ]; do
+  INSTANCE_STATUS=$(kubectl get WmlBase wml-cr -n "${NAMESPACE}" -o jsonpath='{.status.wmlStatus} {"\n"}')
+  echo "Waiting for instance wml-cr to be ready. Current status : "${INSTANCE_STATUS}""
+  if [ $INSTANCE_STATUS == "Completed" ]; then
+    break
+  fi
+  sleep 30
+done
+echo "Watson Machine Learning WmlBase/wkc-cr is "${INSTANCE_STATUS}""
+
+############################################################
+# Data Virtualization Service check
+############################################################
+INSTANCE_STATUS=""
+while [ true ]; do
+  INSTANCE_STATUS=$(kubectl get DvService dv-service -n "${NAMESPACE}" -o jsonpath='{.status.reconcileStatus} {"\n"}')
+  echo "Waiting for instance dv-service to be ready. Current status : "${INSTANCE_STATUS}""
+  if [ $INSTANCE_STATUS == "Completed" ]; then
+    break
+  fi
+  sleep 60
+done
+echo "Data Virtualization DvService/"${INSTANCE_NAME}" is "${INSTANCE_STATUS}""
+
+############################################################
+# Data Virtualization Provision Instance check
+############################################################
+dvenginePod=$(kubectl get pod -n $NAMESPACE --no-headers=true -l component=db2dv,name=dashmpp-head-0,role=db,type=engine | awk '{print $1}')
+echo "DV engine head pod is $dvenginePod"
+
+#Wait until the DV service is  ready
+dvNotReady=1
+iter=0
+maxIter=120 #DV takes longer than BigSQL to become ready
+while [ true ]; do
+    oc logs -n $NAMESPACE $dvenginePod | grep "db2uctl markers get QP_START_PERFORMED" >/dev/null
+    echo "dvNotReady "$dvNotReady""
+    dvNotReady=$?
+    if [ $dvNotReady -eq 0 ]; then
+        break
+    else
+        echo "Waiting for the DV service to be ready. Recheck in 30 seconds"
+        let iter=iter+1
+        if [ $iter == $maxIter ]; then
+          exit 1
+        fi
+        sleep 30
+    fi
+done
+
+echo "All Prerequisites for Data Fabric are met. Proceeding with Data Fabric Configuration"
+
+
 POD=$(kubectl get pods -n ${NAMESPACE}  | awk '{print $1}' | grep "datafabric")
 echo $POD
 #Check Data Fabric POD Status
@@ -74,6 +177,62 @@ done
 # cleanup the resources
 kubectl delete configmap datafabric-configmap -n ${NAMESPACE}
 kubectl delete job datafabric-job -n ${NAMESPACE}
+
+# Cleanup WKC
+echo "Cleaning up UG"
+UGCR=$(oc get ug -n "${NAMESPACE}" --no-headers | awk '{print $1}')
+oc patch ug $UGCR -n "${NAMESPACE}" -p '{"metadata":{"finalizers":[]}}' --type=merge
+oc delete ug -n "${NAMESPACE}" $UGCR
+
+UGCRD=$(oc get crd -n "${NAMESPACE}" --no-headers | grep ug.wkc | awk '{print $1}')
+oc delete crd -n "${NAMESPACE}" $UGCRD
+
+echo "Cleaning up IIS"
+IISCR=$(oc get iis -n "${NAMESPACE}" --no-headers | awk '{print $1}')
+oc patch iis $IISCR -n "${NAMESPACE}" -p '{"metadata":{"finalizers":[]}}' --type=merge
+oc delete iis -n "${NAMESPACE}" $IISCR
+
+IISCRD=$(oc get crd -n "${NAMESPACE}" --no-headers | grep iis | awk '{print $1}')
+oc delete crd -n "${NAMESPACE}" $IISCRD
+
+oc delete sub ibm-cpd-iis-operator -n "${OPERATOR_NAMESPACE}"
+
+IISCSV=$(oc get csv -n "${OPERATOR_NAMESPACE}" --no-headers | grep ibm-cpd-iis | awk '{print $1}')
+oc delete csv $IISCSV -n "${OPERATOR_NAMESPACE}"
+
+DB2OR=$(oc get operandrequests -n "${NAMESPACE}" --no-headers | grep iis-requests-db2uaas | awk '{print $1}')
+oc delete operandrequests $DB2OR -n "${NAMESPACE}"
+
+oc delete catsrc ibm-cpd-iis-operator-catalog -n openshift-marketplace
+
+echo "Cleaning up WKC"
+WKCCR=$(oc get wkc -n "${NAMESPACE}" --no-headers | awk '{print $1}')
+oc patch wkc $WKCCR -n "${NAMESPACE}" -p '{"metadata":{"finalizers":[]}}' --type=merge
+oc delete wkc -n "${NAMESPACE}" $WKCCR
+
+WKCCRD=$(oc get crd -n "${NAMESPACE}" --no-headers | grep wkc.wkc | awk '{print $1}')
+oc delete crd -n "${NAMESPACE}" $WKCCRD
+
+oc delete sub ibm-cpd-wkc-operator-catalog-subscription  -n "${OPERATOR_NAMESPACE}"
+
+WKCCSV=$(oc get csv -n "${OPERATOR_NAMESPACE}" --no-headers | grep wkc | awk '{print $1}')
+oc delete csv $WKCCSV -n "${OPERATOR_NAMESPACE}"
+
+echo "Cleaning up operandrequests"
+ORCERT=$(oc get operandrequests -n "${NAMESPACE}" --no-headers | grep cert-mgr-dep | awk '{print $1}')
+oc delete operandrequest $ORCERT -n "${NAMESPACE}"
+oc delete operandrequest wkc-requests-ccs -n "${NAMESPACE}"
+oc delete operandrequest wkc-requests-datarefinery -n "${NAMESPACE}"
+oc delete operandrequest wkc-requests-db2uaas -n "${NAMESPACE}"
+oc delete operandrequest wkc-requests-iis -n "${NAMESPACE}"
+
+oc delete catsrc ibm-cpd-wkc-operator-catalog -n openshift-marketplace
+
+echo "Cleaning up installplan"
+WKCIP=$(oc get ip -n "${OPERATOR_NAMESPACE}" --no-headers | grep wkc | awk '{print $1}')
+IISIP=$(oc get ip -n "${OPERATOR_NAMESPACE}" --no-headers | grep iis | awk '{print $1}')
+oc delete ip $WKCIP -n "${OPERATOR_NAMESPACE}"
+oc delete ip $IISIP -n "${OPERATOR_NAMESPACE}"
 
 cd ..
 rm -rf .testrepo
