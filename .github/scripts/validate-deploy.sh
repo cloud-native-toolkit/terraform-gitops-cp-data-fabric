@@ -1,30 +1,7 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
-
 GIT_REPO=$(cat git_repo)
 GIT_TOKEN=$(cat git_token)
-
-BIN_DIR=$(cat .bin_dir)
-
-export PATH="${BIN_DIR}:${PATH}"
-
-source "${SCRIPT_DIR}/validation-functions.sh"
-
-if ! command -v oc 1> /dev/null 2> /dev/null; then
-  echo "oc cli not found" >&2
-  exit 1
-fi
-
-if ! command -v kubectl 1> /dev/null 2> /dev/null; then
-  echo "kubectl cli not found" >&2
-  exit 1
-fi
-
-if ! command -v ibmcloud 1> /dev/null 2> /dev/null; then
-  echo "ibmcloud cli not found" >&2
-  exit 1
-fi
 
 export KUBECONFIG=$(cat .kubeconfig)
 NAMESPACE=$(jq -r '.cpd_namespace // "cp4d"' gitops-output.json)
