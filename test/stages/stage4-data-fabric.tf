@@ -16,5 +16,4 @@ module "cp-data-fabric" {
   # module.cp4d-instance.namespace
   s3_bucket_id = module.aws_s3_instance.s3_bucket_id
   s3_bucket_region = module.aws_s3_instance.s3_bucket_region
-  s3_bucket_url = module.aws_s3_instance.s3_bucket_id
 }

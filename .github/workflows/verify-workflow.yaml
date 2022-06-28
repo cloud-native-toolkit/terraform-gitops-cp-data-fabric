@@ -27,11 +27,7 @@ on:
       GIT_ADMIN_TOKEN:
         required: true
       CP_ENTITLEMENT_KEY:
-        required: true
-      TF_VAR_access_key:
-        required: true
-      TF_VAR_secret_key: 
-        required: true        
+        required: true    
       AWS_ACCESS_KEY_ID:
         required: true        
       AWS_SECRET_ACCESS_KEY:
