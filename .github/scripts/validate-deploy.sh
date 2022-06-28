@@ -17,6 +17,8 @@ SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
 LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
 TYPE=$(jq -r '.type // "base"' gitops-output.json)
 
+sleep 600
+
 mkdir -p .testrepo
 
 git clone https://${GIT_TOKEN}@${GIT_REPO} .testrepo
