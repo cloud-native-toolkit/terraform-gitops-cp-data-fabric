@@ -15,6 +15,6 @@ module "cp-data-fabric" {
   kubeseal_cert = module.gitops.sealed_secrets_cert
   cpd_namespace = "cp4d"
   # module.cp4d-instance.namespace
-  s3_bucket_id = module.aws_s3_instance.s3_bucket_id
-  s3_bucket_region = module.aws_s3_instance.s3_bucket_region
+  # s3_bucket_id = module.aws_s3_instance.s3_bucket_id
+  # s3_bucket_region = module.aws_s3_instance.s3_bucket_region
 }
