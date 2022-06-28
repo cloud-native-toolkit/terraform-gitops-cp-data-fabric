@@ -96,10 +96,8 @@ jobs:
           TF_VAR_cluster_username: ${{ steps.variables.outputs.CLUSTER_USERNAME }}
           TF_VAR_cluster_password: ${{ steps.variables.outputs.CLUSTER_PASSWORD }}
           TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
-          TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          
-
+          TF_VAR_access_key: ${{ steps.variables.outputs.AWS_ACCESS_KEY_ID }}
+          TF_VAR_secret_key: ${{ steps.variables.outputs.AWS_SECRET_ACCESS_KEY }}
       - name: Verify destroy on ${{ matrix.testcase }}
         uses: cloud-native-toolkit/action-module-verify-destroy@main
         if: ${{ always() && inputs.skipDestroy != 'true' }}
@@ -115,5 +113,5 @@ jobs:
           TF_VAR_cluster_username: ${{ steps.variables.outputs.CLUSTER_USERNAME }}
           TF_VAR_cluster_password: ${{ steps.variables.outputs.CLUSTER_PASSWORD }}
           TF_VAR_ibmcloud_api_key: ${{ secrets.IBMCLOUD_API_KEY }}
-          TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_access_key: ${{ steps.variables.outputs.AWS_ACCESS_KEY_ID }}
+          TF_VAR_secret_key: ${{ steps.variables.outputs.AWS_SECRET_ACCESS_KEY }}
