@@ -6,14 +6,12 @@ description: >-
 tags:
   - tools
   - gitops
+  - datafabric
 versions:
   - platforms:
       - kubernetes
       - ocp3
       - ocp4
-    providers:
-      - name: aws
-        source: "hashicorp/aws"
     dependencies:
       - id: gitops
         refs:
@@ -56,3 +54,4 @@ versions:
         moduleRef:
           id: aws-s3-instance
           output: s3_bucket_region
+softwareProvider: ibm-cp
