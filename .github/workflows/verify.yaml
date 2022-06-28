@@ -10,7 +10,7 @@ on:
 jobs:
   verify:
     if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip ci' ) }}
-    uses: verify-workflow.yaml
+    uses: ./.github/workflows/verify-workflow.yaml
     with:
       testcase: ocp4_latest_gitops_cp4d
     secrets:
