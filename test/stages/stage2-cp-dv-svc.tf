@@ -1,10 +1,6 @@
 module "cp4d-dv-service" {
     source = "github.com/cloud-native-toolkit/terraform-gitops-cp-data-virt-svc"
 
-    depends_on = [
-        module.db2u,
-        module.gitops_cp_wml
-    ]
 
     gitops_config = module.gitops.gitops_config
     git_credentials = module.gitops.git_credentials
@@ -14,5 +10,7 @@ module "cp4d-dv-service" {
     cpd_namespace = "cp4d"
     kubeseal_cert = module.gitops.sealed_secrets_cert
     instance_version = "1.7.8"
+    sub_syncwave = "-8"
+    inst_syncwave = "-6"
     
 }

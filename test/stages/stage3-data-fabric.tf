@@ -2,6 +2,11 @@ module "cp-data-fabric" {
   source = "./module"
 
   depends_on = [
+    module.db2u,
+    module.gitops_cp_wkc,
+    module.cp-watson-studio,
+    module.gitops_cp_wml,
+    module.cp4d-dv-service,
     module.cpd-dv-provision,
     module.aws-s3-bucket,
     module.aws_s3_instance

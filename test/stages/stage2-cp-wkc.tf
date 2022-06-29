@@ -1,9 +1,6 @@
-module "gitops_cp_wml" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-wml"
+module "gitops_cp_wkc" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-cp-wkc"
 
-  depends_on = [
-    module.cp-watson-studio
-  ]
 
   gitops_config = module.gitops.gitops_config
   git_credentials = module.gitops.git_credentials
@@ -15,4 +12,6 @@ module "gitops_cp_wml" {
   operator_namespace = "cpd-operators"
   cpd_namespace = "cp4d"
   instance_version = "4.0.9"
+  sub_syncwave = "-20"
+  inst_syncwave = "-18"
 }

@@ -1,10 +1,6 @@
 module "cp-watson-studio" {
   source = "github.com/cloud-native-toolkit/terraform-gitops-cp-watson-studio.git"
 
-  depends_on = [
-    module.gitops_cp_wkc
-  ]
-
   gitops_config = module.gitops.gitops_config
   git_credentials = module.gitops.git_credentials
   server_name = module.gitops.server_name
@@ -15,4 +11,6 @@ module "cp-watson-studio" {
   cpd_namespace = "cp4d"
   # module.cp4d-instance.namespace
   instance_version = "4.0.9"
+  sub_syncwave = "-16"
+  inst_syncwave = "-14"
 }
