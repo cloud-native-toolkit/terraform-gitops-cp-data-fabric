@@ -10,7 +10,9 @@ locals {
     operator_namespace = var.operator_namespace
   }
   layer = "services"
-  type  = "base"
+  operator_type  = "operators"
+  base_type = "base"
+  type = "instances"
   application_branch = "main"
   namespace = var.namespace
   layer_config = var.gitops_config[local.layer]
