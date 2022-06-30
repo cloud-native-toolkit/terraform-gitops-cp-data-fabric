@@ -13,37 +13,37 @@ fi
 
 mkdir -p "${DEST_DIR}"
 
-if [[ -z "${DATABASE_USERNAME}" ]] || [[ -z "${DATABASE_PASSWORD}" ]] || [[ -z "${DATABASE_HOST}" ]] || [[ -z "${DATABASE_PORT}" ]] || [[ -z "${DATABASE_NAME}" ]]; then
-  echo "DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT, and DATABASE_NAME are required as environment variables"
+if [[ -z "${VAL_AWS_ACCESS_KEY}" ]] || [[ -z "${VAL_AWS_SECRET_KEY}" ]] || [[ -z "${VAL_S3_BUCKET_ID}" ]] || [[ -z "${VAL_S3_BUCKET_REGION}" ]] || [[ -z "${VAL_S3_BUCKET_URL}" ]]; then
+  echo "VAL_AWS_ACCESS_KEY, VAL_AWS_SECRET_KEY, VAL_S3_BUCKET_ID, VAL_S3_BUCKET_REGION, and VAL_S3_BUCKET_URL are required as environment variables"
   exit 1
 fi
 
-if [[ -z "${HOST_KEY}" ]]; then
-  HOST_KEY="host"
+if [[ -z "${KEY_AWS_ACCESS_KEY}" ]]; then
+  KEY_AWS_ACCESS_KEY="aws_access_key"
 fi
 
-if [[ -z "${PORT_KEY}" ]]; then
-  PORT_KEY="port"
+if [[ -z "${KEY_AWS_SECRET_KEY}" ]]; then
+  KEY_AWS_SECRET_KEY="aws_secret_key"
 fi
 
-if [[ -z "${DATABASE_NAME_KEY}" ]]; then
-  DATABASE_NAME_KEY="database"
+if [[ -z "${KEY_S3_BUCKET_ID}" ]]; then
+  KEY_S3_BUCKET_ID="aws_s3_bucket_id"
 fi
 
-if [[ -z "${USERNAME_KEY}" ]]; then
-  USERNAME_KEY="username"
+if [[ -z "${KEY_S3_BUCKET_REGION}" ]]; then
+  KEY_S3_BUCKET_REGION="aws_region"
 fi
 
-if [[ -z "${PASSWORD_KEY}" ]]; then
-  PASSWORD_KEY="password"
+if [[ -z "${KEY_S3_BUCKET_URL}" ]]; then
+  KEY_S3_BUCKET_URL="aws_s3_bucket_url"
 fi
 
 kubectl create secret generic "${SECRET_NAME}" \
-  --from-literal="${HOST_KEY}=${DATABASE_HOST}" \
-  --from-literal="${PORT_KEY}=${DATABASE_PORT}" \
-  --from-literal="${DATABASE_NAME_KEY}=${DATABASE_NAME}" \
-  --from-literal="${USERNAME_KEY}=${DATABASE_USERNAME}" \
-  --from-literal="${PASSWORD_KEY}=${DATABASE_PASSWORD}" \
+  --from-literal="${KEY_AWS_ACCESS_KEY}=${VAL_AWS_ACCESS_KEY}" \
+  --from-literal="${KEY_AWS_SECRET_KEY}=${VAL_AWS_SECRET_KEY}" \
+  --from-literal="${KEY_S3_BUCKET_ID}=${VAL_S3_BUCKET_ID}" \
+  --from-literal="${KEY_S3_BUCKET_REGION}=${VAL_S3_BUCKET_REGION}" \
+  --from-literal="${KEY_S3_BUCKET_URL}=${VAL_S3_BUCKET_URL}" \
   -n "${NAMESPACE}" \
   --dry-run=client \
   --output=yaml > "${DEST_DIR}/${SECRET_NAME}.yaml"
