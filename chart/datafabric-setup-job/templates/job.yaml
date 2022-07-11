@@ -8,6 +8,7 @@ spec:
       name: df-setup-pod
     spec:
       restartPolicy: Never
+      serviceAccountName: data-fabric-sa
       volumes:
         - name: df-scripts
           configMap:

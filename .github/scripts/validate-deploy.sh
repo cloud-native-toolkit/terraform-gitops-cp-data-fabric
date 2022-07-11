@@ -56,6 +56,18 @@ fi
 ############################################################
 #  Watson Knowledge Catalog Instance check
 ############################################################
+str="No resources found"
+while [ true ]; do
+  SVC_CHECK=$(kubectl get WKC -n "${NAMESPACE}" 2>&1)
+  echo $SVC_CHECK
+  if [[ $SVC_CHECK == *"$str"* ]]; then
+    echo "Waiting for WKC"
+  else
+    echo "WKC Available"
+    break
+  fi
+done
+
 INSTANCE_STATUS=""
 while [ true ]; do
   INSTANCE_STATUS=$(kubectl get WKC wkc-cr -n "${NAMESPACE}" -o jsonpath='{.status.wkcStatus} {"\n"}')
@@ -63,13 +75,25 @@ while [ true ]; do
   if [ $INSTANCE_STATUS == "Completed" ]; then
     break
   fi
-  sleep 30
+  sleep 60
 done
 echo "Watson Knowledge Catalog WKC/wkc-cr is "${INSTANCE_STATUS}""
 
 ############################################################
 # Watson Studio Instance check
 ############################################################
+str="No resources found"
+while [ true ]; do
+  SVC_CHECK=$(kubectl get WS -n "${NAMESPACE}" 2>&1)
+  echo $SVC_CHECK
+  if [[ $SVC_CHECK == *"$str"* ]]; then
+    echo "Waiting for WS"
+  else
+    echo "WS Available"
+    break
+  fi
+done
+
 INSTANCE_STATUS=""
 while [ true ]; do
   INSTANCE_STATUS=$(kubectl get WS ws-cr -n "${NAMESPACE}" -o jsonpath='{.status.wsStatus} {"\n"}')
@@ -84,6 +108,18 @@ echo "Watson Studio WS/ws-cr is "${INSTANCE_STATUS}""
 ############################################################
 # Watson Machine Learning Instance check
 ############################################################
+str="No resources found"
+while [ true ]; do
+  SVC_CHECK=$(kubectl get WmlBase -n "${NAMESPACE}" 2>&1)
+  echo $SVC_CHECK
+  if [[ $SVC_CHECK == *"$str"* ]]; then
+    echo "Waiting for WmlBase"
+  else
+    echo "WmlBase Available"
+    break
+  fi
+done
+
 INSTANCE_STATUS=""
 while [ true ]; do
   INSTANCE_STATUS=$(kubectl get WmlBase wml-cr -n "${NAMESPACE}" -o jsonpath='{.status.wmlStatus} {"\n"}')
@@ -91,13 +127,25 @@ while [ true ]; do
   if [ $INSTANCE_STATUS == "Completed" ]; then
     break
   fi
-  sleep 30
+  sleep 60
 done
 echo "Watson Machine Learning WmlBase/wkc-cr is "${INSTANCE_STATUS}""
 
 ############################################################
 # Data Virtualization Service check
 ############################################################
+str="No resources found"
+while [ true ]; do
+  SVC_CHECK=$(kubectl get DvService -n "${NAMESPACE}" 2>&1)
+  echo $SVC_CHECK
+  if [[ $SVC_CHECK == *"$str"* ]]; then
+    echo "Waiting for DvService"
+  else
+    echo "DvService Available"
+    break
+  fi
+done
+
 INSTANCE_STATUS=""
 while [ true ]; do
   INSTANCE_STATUS=$(kubectl get DvService dv-service -n "${NAMESPACE}" -o jsonpath='{.status.reconcileStatus} {"\n"}')
@@ -112,6 +160,8 @@ echo "Data Virtualization DvService/"${INSTANCE_NAME}" is "${INSTANCE_STATUS}""
 ############################################################
 # Data Virtualization Provision Instance check
 ############################################################
+echo "DV Readiness Check"
+
 dvenginePod=$(kubectl get pod -n $NAMESPACE --no-headers=true -l component=db2dv,name=dashmpp-head-0,role=db,type=engine | awk '{print $1}')
 echo "DV engine head pod is $dvenginePod"
 
@@ -120,36 +170,37 @@ dvNotReady=1
 iter=0
 maxIter=120 #DV takes longer than BigSQL to become ready
 while [ true ]; do
-    oc logs -n $NAMESPACE $dvenginePod | grep "db2uctl markers get QP_START_PERFORMED" >/dev/null
-    echo "dvNotReady "$dvNotReady""
-    dvNotReady=$?
-    if [ $dvNotReady -eq 0 ]; then
-        break
-    else
-        echo "Waiting for the DV service to be ready. Recheck in 30 seconds"
-        let iter=iter+1
-        if [ $iter == $maxIter ]; then
-          exit 1
-        fi
-        sleep 30
+  oc logs -n $NAMESPACE $dvenginePod | grep "db2uctl markers get QP_START_PERFORMED" >/dev/null
+  echo "dvNotReady "$dvNotReady""
+  dvNotReady=$?
+  if [ $dvNotReady -eq 0 ]; then
+    break
+  else
+    echo "Waiting for the DV service to be ready. Recheck in 30 seconds"
+    let iter=iter+1
+    if [ $iter == $maxIter ]; then
+      exit 1
     fi
+    sleep 60
+  fi
 done
 
 echo "All Prerequisites for Data Fabric are met. Proceeding with Data Fabric Configuration"
 
-
-POD=$(kubectl get pods -n ${NAMESPACE}  | awk '{print $1}' | grep "datafabric")
+POD=$(kubectl get pods -n ${NAMESPACE} | awk '{print $1}' | grep "datafabric")
 echo $POD
 #Check Data Fabric POD Status
 POD_STATUS=""
 while [ true ]; do
-  POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} |awk '{print $3}')
+  POD_STATUS=$(kubectl get po ${POD} -n ${NAMESPACE} | grep ${POD} | awk '{print $3}')
   echo "Waiting for POD ${POD} to be Completed. Current status : "${POD_STATUS}""
   if [ ${POD_STATUS} == "Completed" ]; then
     break
   fi
   sleep 60
 done
+
+sleep 120
 
 # cleanup the resources
 kubectl delete configmap datafabric-configmap -n ${NAMESPACE}
@@ -190,7 +241,7 @@ oc delete wkc -n "${NAMESPACE}" $WKCCR
 WKCCRD=$(oc get crd -n "${NAMESPACE}" --no-headers | grep wkc.wkc | awk '{print $1}')
 oc delete crd -n "${NAMESPACE}" $WKCCRD
 
-oc delete sub ibm-cpd-wkc-operator-catalog-subscription  -n "${OPERATOR_NAMESPACE}"
+oc delete sub ibm-cpd-wkc-operator-catalog-subscription -n "${OPERATOR_NAMESPACE}"
 
 WKCCSV=$(oc get csv -n "${OPERATOR_NAMESPACE}" --no-headers | grep wkc | awk '{print $1}')
 oc delete csv $WKCCSV -n "${OPERATOR_NAMESPACE}"
@@ -213,5 +264,3 @@ oc delete ip $IISIP -n "${OPERATOR_NAMESPACE}"
 
 cd ..
 rm -rf .testrepo
-
-

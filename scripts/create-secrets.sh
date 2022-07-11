@@ -13,6 +13,7 @@ fi
 
 mkdir -p "${DEST_DIR}"
 
+
 if [[ -z "${VAL_AWS_ACCESS_KEY}" ]] || [[ -z "${VAL_AWS_SECRET_KEY}" ]] || [[ -z "${VAL_S3_BUCKET_ID}" ]] || [[ -z "${VAL_S3_BUCKET_REGION}" ]] || [[ -z "${VAL_S3_BUCKET_URL}" ]]; then
   echo "VAL_AWS_ACCESS_KEY, VAL_AWS_SECRET_KEY, VAL_S3_BUCKET_ID, VAL_S3_BUCKET_REGION, and VAL_S3_BUCKET_URL are required as environment variables"
   exit 1
@@ -38,12 +39,12 @@ if [[ -z "${KEY_S3_BUCKET_URL}" ]]; then
   KEY_S3_BUCKET_URL="aws_s3_bucket_url"
 fi
 
+echo "**create secret**"
+
 kubectl create secret generic "${SECRET_NAME}" \
   --from-literal="${KEY_AWS_ACCESS_KEY}=${VAL_AWS_ACCESS_KEY}" \
   --from-literal="${KEY_AWS_SECRET_KEY}=${VAL_AWS_SECRET_KEY}" \
   --from-literal="${KEY_S3_BUCKET_ID}=${VAL_S3_BUCKET_ID}" \
   --from-literal="${KEY_S3_BUCKET_REGION}=${VAL_S3_BUCKET_REGION}" \
   --from-literal="${KEY_S3_BUCKET_URL}=${VAL_S3_BUCKET_URL}" \
-  -n "${NAMESPACE}" \
-  --dry-run=client \
-  --output=yaml > "${DEST_DIR}/${SECRET_NAME}.yaml"
+  -n "${NAMESPACE}"

@@ -1,17 +1,6 @@
 module "cp-data-fabric" {
   source = "./module"
 
-  depends_on = [
-    module.db2u,
-    module.gitops_cp_wkc,
-    module.cp-watson-studio,
-    module.gitops_cp_wml,
-    module.cp4d-dv-service,
-    module.cpd-dv-provision,
-    module.aws-s3-bucket,
-    module.aws_s3_instance
-  ]
-
   gitops_config = module.gitops.gitops_config
   git_credentials = module.gitops.git_credentials
   server_name = module.gitops.server_name
@@ -20,5 +9,7 @@ module "cp-data-fabric" {
   cpd_namespace = "cp4d"
   # module.cp4d-instance.namespace
   s3_bucket_id = module.aws_s3_instance.s3_bucket_id
-  s3_bucket_region = module.aws_s3_instance.s3_bucket_region
+  s3_bucket_region = "ap-south-1"
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
