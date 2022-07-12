@@ -47,4 +47,6 @@ kubectl create secret generic "${SECRET_NAME}" \
   --from-literal="${KEY_S3_BUCKET_ID}=${VAL_S3_BUCKET_ID}" \
   --from-literal="${KEY_S3_BUCKET_REGION}=${VAL_S3_BUCKET_REGION}" \
   --from-literal="${KEY_S3_BUCKET_URL}=${VAL_S3_BUCKET_URL}" \
-  -n "${NAMESPACE}"
+  -n "${NAMESPACE}" \
+  --dry-run=client \
+  --output=yaml > "${DEST_DIR}/${SECRET_NAME}.yaml"

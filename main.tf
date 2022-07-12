@@ -3,7 +3,7 @@ locals {
   job_name      = "datafabric-setup-job"
   bin_dir       = module.setup_clis.bin_dir
   yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.job_name}"
-  secrets_dir   = "${path.cwd}/.tmp/${local.name}/chart/secrets"
+  secrets_dir   = "${path.cwd}/.tmp/${local.name}/secrets"
   service_url   = "http://${local.name}.${var.namespace}"
   values_content = {
     cpd_namespace = var.cpd_namespace
