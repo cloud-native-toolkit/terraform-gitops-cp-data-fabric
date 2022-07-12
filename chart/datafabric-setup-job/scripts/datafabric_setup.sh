@@ -143,6 +143,12 @@ sleep 180
 dvenginePod=$(kubectl get pod -n $CPD_NAMESPACE --no-headers=true -l component=db2dv,name=dashmpp-head-0,role=db,type=engine | awk '{print $1}')
 echo "DV engine head pod is $dvenginePod"
 
+while [ -z $dvenginePod ]; do
+  dvenginePod=$(kubectl get pod -n $CPD_NAMESPACE --no-headers=true -l component=db2dv,name=dashmpp-head-0,role=db,type=engine | awk '{print $1}')
+  echo "DV engine head pod is $dvenginePod"
+  sleep 60
+done
+
 #Wait until the DV service is  ready
 dvNotReady=1
 iter=0

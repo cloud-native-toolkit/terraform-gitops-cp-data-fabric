@@ -11,6 +11,8 @@ module "gitops_cp_wkc" {
   #cpd_namespace = module.gitops_cp4d_instance.namespace
   operator_namespace = "cpd-operators"
   cpd_namespace = "cp4d"
+  storage_vendor = "ocs"
+  storage_class = "ocs-storagecluster-cephfs"
   instance_version = "4.0.9"
   sub_syncwave = "-20"
   inst_syncwave = "-18"

@@ -10,6 +10,8 @@ module "cp-watson-studio" {
   # module.gitops_cp4d_operator.namespace
   cpd_namespace = "cp4d"
   # module.cp4d-instance.namespace
+  storage_vendor = "ocs"
+  storage_class = "ocs-storagecluster-cephfs"
   instance_version = "4.0.9"
   sub_syncwave = "-16"
   inst_syncwave = "-14"
