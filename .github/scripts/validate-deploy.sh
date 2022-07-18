@@ -192,6 +192,7 @@ echo $POD
 #Check Data Fabric POD Status
 POD_STATUS=""
 while [ true ]; do
+  POD=$(kubectl get pods -n ${CPD_NAMESPACE} | awk '{print $1}' | grep "datafabric")
   POD_STATUS=$(kubectl get po ${POD} -n ${CPD_NAMESPACE} | grep ${POD} | awk '{print $3}')
   echo "Waiting for POD ${POD} to be Completed. Current status : "${POD_STATUS}""
   if [ ${POD_STATUS} == "Completed" ]; then
