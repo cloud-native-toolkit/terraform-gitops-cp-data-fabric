@@ -1,8 +1,5 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-aws_access_key : "XXX"
-aws_secret_key: "XXX"
-s3_bucket_id : "XXX"
-s3_bucket_region : "XXX"
-s3_bucket_url : "XXX"
+cpd_namespace: cp4d
+operator_namespace: cpd-operators

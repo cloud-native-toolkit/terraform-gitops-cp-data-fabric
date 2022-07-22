@@ -6,6 +6,10 @@ module "cp-data-fabric" {
   server_name = module.gitops.server_name
   namespace = module.gitops_namespace.name
   kubeseal_cert = module.gitops.sealed_secrets_cert
-  cpd_namespace = "gitops-cp4d-instance"
+  cpd_namespace = "cp4d"
   # module.cp4d-instance.namespace
+  s3_bucket_id = module.aws_s3_instance.s3_bucket_id
+  s3_bucket_region = "ap-south-1"
+  access_key = var.access_key
+  secret_key = var.secret_key
 }

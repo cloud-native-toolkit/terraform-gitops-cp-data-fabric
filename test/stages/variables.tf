@@ -80,23 +80,27 @@ variable "cp_entitlement_key" {
 variable "cpd_namespace" {
   type        = string
   description = "CPD namespace"
-  default = "gitops-cp4d-instance"
+  default = "cp4d"
 }
 
-variable "region" {
+variable "s3_bucket_region" {
   type        = string
   default     = "ap-south-1"
   description = "Please set the region where the resouces to be created "
 }
 
+variable "s3_bucket_url" {
+  type        = string
+  default     = ""
+  description = "Please set the bucket url where the resouces to be created "
+}
+
 variable "access_key" {
   type        = string
-  default = ""
   description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
 }
 
 variable "secret_key" {
   type        = string
-  default = ""
   description= " Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
  }
