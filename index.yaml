@@ -6,7 +6,179 @@ description: >-
 tags:
   - tools
   - gitops
+  - datafabric
 versions:
+  - platforms:
+      - kubernetes
+      - ocp3
+      - ocp4
+    dependencies:
+      - id: gitops
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-tools-gitops.git
+            version: '>= 1.1.0'
+      - id: namespace
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
+            version: '>= 1.0.0'
+      - id: aws-s3-instance
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-aws-s3-instance
+            version: '>= 1.1.0'
+    variables:
+      - name: gitops_config
+        type: |-
+          object({
+              boostrap = object({
+                argocd-config = object({
+                  project = string
+                  repo = string
+                  url = string
+                  path = string
+                })
+              })
+              infrastructure = object({
+                argocd-config = object({
+                  project = string
+                  repo = string
+                  url = string
+                  path = string
+                })
+                payload = object({
+                  repo = string
+                  url = string
+                  path = string
+                })
+              })
+              services = object({
+                argocd-config = object({
+                  project = string
+                  repo = string
+                  url = string
+                  path = string
+                })
+                payload = object({
+                  repo = string
+                  url = string
+                  path = string
+                })
+              })
+              applications = object({
+                argocd-config = object({
+                  project = string
+                  repo = string
+                  url = string
+                  path = string
+                })
+                payload = object({
+                  repo = string
+                  url = string
+                  path = string
+                })
+              })
+            })
+        description: Config information regarding the gitops repo structure
+        moduleRef:
+          id: gitops
+          output: gitops_config
+      - name: git_credentials
+        type: |-
+          list(object({
+              repo = string
+              url = string
+              username = string
+              token = string
+            }))
+        description: The credentials for the gitops repo(s)
+        sensitive: true
+        moduleRef:
+          id: gitops
+          output: git_credentials
+      - name: namespace
+        type: string
+        description: The namespace where the application should be deployed
+        moduleRef:
+          id: namespace
+          output: name
+      - name: kubeseal_cert
+        type: string
+        description: The certificate/public key used to encrypt the sealed secrets
+        default: ''
+        moduleRef:
+          id: gitops
+          output: sealed_secrets_cert
+      - name: server_name
+        type: string
+        description: The name of the server
+        default: default
+        moduleRef:
+          id: gitops
+          output: server_name
+      - name: cpd_namespace
+        type: string
+        description: CPD namespace
+        default: cp4d
+      - name: operator_namespace
+        type: string
+        description: Namespace for cpd operators
+        default: cpd-operators
+      - name: s3_bucket_id
+        description: The name of the bucket.
+        default: '""'
+        moduleRef:
+          id: aws-s3-instance
+          output: s3_bucket_id
+      - name: s3_bucket_region
+        type: string
+        default: ap-south-1
+        description: 'Please set the region where the resouces to be created '
+        moduleRef:
+          id: aws-s3-instance
+          output: s3_bucket_region
+      - name: s3_bucket_url
+        type: string
+        default: ''
+        description: 'Please set the bucket url where the resouces to be created '
+      - name: access_key
+        type: string
+        description: ' Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html'
+      - name: secret_key
+        type: string
+        description: ' Refer https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html'
+      - name: wkc_inst_name
+        type: string
+        description: WKC Instance name
+        default: wkc-cr
+      - name: ws_inst_name
+        type: string
+        description: WS Instance name
+        default: ws-cr
+      - name: wml_inst_name
+        type: string
+        description: WML Instance name
+        default: ibm-cpd-wml-operator-subscription
+      - name: dv_svc_inst_name
+        type: string
+        description: DV Instance name
+        default: ibm-dv-operator-catalog-subscription
+    version: v1.2.0
+    outputs:
+      - name: name
+        description: The name of the module
+      - name: cpd_namespace
+        description: cpd namespace
+      - name: operator_namespace
+        description: operator namespace
+      - name: branch
+        description: The branch where the module config has been placed
+      - name: namespace
+        description: The namespace where the module will be deployed
+      - name: server_name
+        description: The server where the module will be deployed
+      - name: layer
+        description: The layer where the module is deployed
+      - name: type
+        description: The type of module where the module is deployed
   - platforms:
       - kubernetes
       - ocp3
@@ -568,3 +740,4 @@ versions:
       - name: type
         description: The type of module where the module is deployed
 id: github.com/cloud-native-toolkit/terraform-gitops-cp-data-fabric
+softwareProvider: ibm-cp

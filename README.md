@@ -48,13 +48,13 @@ This module makes use of the output from other modules:
 - [terraform-gitops-pull-secret]
 - [gitops-cp-catalogs]
 - [terraform-gitops-pull-secret] (https://github.com/cloud-native-toolkit/terraform-gitops-pull-secret)
-- [terraform-gitops-cp-foundational-services] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-foundational-services)
-- [terraform-gitops-cp4d-operator] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-operator)
-- [terraform-gitops-cp4d-instance] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-instance)
-- [cp-data-virtualization-service] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-data-virtualization-service)
-- [cp-watson-knowledge-catalog] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-knowledge-catalog)
+- [cp-foundational-services] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-foundational-services)
+- [cp4d-operator] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-operator)
+- [cp4d-instance] (https://github.com/cloud-native-toolkit/terraform-gitops-cp4d-instance)
+- [cp-watson-knowledge-catalog] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-wkc)
 - [cp-watson-studio] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-studio)
-- [cp-watson-machine-learning] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-watson-machine-learning)
+- [cp-watson-machine-learning] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-wml)
+- [cp-data-virtualization-service] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-data-virt-svc)
 - [cp-data-virtualization] (https://github.com/cloud-native-toolkit/terraform-gitops-cp-data-virtualization)
 - [aws-s3-instance] - (https://github.com/cloud-native-toolkit/terraform-aws-s3-instance)
 - [aws-s3-bucket] - (https://github.com/cloud-native-toolkit/terraform-aws-s3-bucket)
@@ -71,7 +71,11 @@ module "cp_data_fabric" {
   server_name = module.gitops.server_name
   namespace = module.gitops_namespace.name
   kubeseal_cert = module.gitops.sealed_secrets_cert
-  cpd_namespace = "gitops-cp4d-instance" # module.cp4d-instance.namespace
+  cpd_namespace = module.cp4d-instance.namespace
+  s3_bucket_id = module.aws_s3_instance.s3_bucket_id
+  s3_bucket_region = "xx-xxxxx-x"
+  access_key = "xxxxxxxxxxxxx"
+  secret_key = "xxxxxxxxxxxxx"
 }
 ```
 
